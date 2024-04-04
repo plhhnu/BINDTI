@@ -105,8 +105,8 @@ class ProteinACmix(nn.Module):
         self.acmix2 = ACmix(in_planes=in_ch[1], out_planes=in_ch[2], head=num_head)
         self.bn2 = nn.BatchNorm1d(in_ch[2])
 
-        # self.acmix3 = ACmix(in_planes=in_ch[2], out_planes=in_ch[3], head=num_head)
-        # self.bn3 = nn.BatchNorm1d(in_ch[3])
+        self.acmix3 = ACmix(in_planes=in_ch[2], out_planes=in_ch[3], head=num_head)
+        self.bn3 = nn.BatchNorm1d(in_ch[3])
 
     def forward(self, v):
         v = self.embedding(v.long())
@@ -115,7 +115,7 @@ class ProteinACmix(nn.Module):
         v = self.bn1(F.relu(self.acmix1(v.unsqueeze(-2))).squeeze(-2))
         v = self.bn2(F.relu(self.acmix2(v.unsqueeze(-2))).squeeze(-2))
 
-        #v = self.bn3(F.relu(self.acmix3(v.unsqueeze(2))).squeeze())
+        v = self.bn3(F.relu(self.acmix3(v.unsqueeze(-2))).squeeze(-2))
 
         v = v.view(v.size(0), v.size(2), -1)
         return v
